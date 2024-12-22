@@ -132,10 +132,7 @@ internal class GameData : IGameData
         if (world.DataCenter.RowId is 0)
             return false;
 
-        if (world.IsPublic)
-            return true;
-
-        return char.IsUpper((char)world.Name.Data.Span[0]);
+        return char.IsUpper((char)world.InternalName.Data.Span[0]);
     }
 
     public void Dispose()
