@@ -20,12 +20,12 @@ public class Wheels
     internal (Item, string Name, byte Grade) Find(string name)
         => _nameToItem.TryGetValue(name.ToLowerInvariant(), out var wheel) ? wheel : (new Item(), string.Empty, (byte)0);
 
-    private static readonly Regex WheelRegex = new(@"^grade (?<grade>\d) wheel of", RegexOptions.Compiled);
-    private static readonly Regex PrimedWheelRegex = new(@"^primed grade (?<grade>\d) wheel of", RegexOptions.Compiled);
+    private static readonly Regex WheelRegex = new(@"^(?<grade>\d)등급 .*의 에테르석", RegexOptions.Compiled);
+    private static readonly Regex PrimedWheelRegex = new(@"^충전된 (?<grade>\d)등급 .*의 에테르석", RegexOptions.Compiled);
 
     internal Wheels(IDataManager gameData)
     {
-        var items        = gameData.GetExcelSheet<Item>(ClientLanguage.English)!;
+        var items        = gameData.GetExcelSheet<Item>(ClientLanguage.Korean)!;
         var itemsLang    = gameData.GetExcelSheet<Item>()!;
         var primedWheels = new List<(string, uint)>(50);
         var englishDict  = new Dictionary<string, (Item Item, string Name, byte Grade)>(50);
@@ -37,7 +37,7 @@ public class Wheels
             {
                 match = PrimedWheelRegex.Match(englishName);
                 if (match.Success)
-                    primedWheels.Add((englishName.Replace("primed ", ""), item.RowId));
+                    primedWheels.Add((englishName.Replace("충전된 ", ""), item.RowId));
                 continue;
             }
 
